@@ -28,7 +28,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const password = document.getElementById('passwordRegister').value;
 
     try {
-        const response = await fetch(`${API_URL}/api/auth/register`, {
+        const response = await fetch(${API_URL}/api/auth/register, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, email, password }),
@@ -39,7 +39,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             alert('Registro exitoso.');
             toggleSections('login');
         } else {
-            alert(`Error: ${result.message}`);
+            alert(Error: ${result.message});
         }
     } catch (error) {
         console.error('Error al registrar:', error);
@@ -53,7 +53,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
+        const response = await fetch(${API_URL}/api/auth/login, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -61,12 +61,13 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
         const result = await response.json();
         if (response.ok) {
+            console.log("token: ", result.token)
             localStorage.setItem('token', result.token);
             alert('Inicio de sesión exitoso.');
             toggleSections('retos');
             fetchChallenges();
         } else {
-            alert(`Error: ${result.message}`);
+            alert(Error: ${result.message});
         }
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -81,11 +82,11 @@ document.getElementById('createChallengeForm').addEventListener('submit', async 
     const token = localStorage.getItem('token');
 
     try {
-        const response = await fetch(`${API_URL}/api/retos`, {
+        const response = await fetch(${API_URL}/api/retos, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': Bearer ${token},
             },
             body: JSON.stringify({ titulo, descripcion }),
         });
@@ -95,7 +96,7 @@ document.getElementById('createChallengeForm').addEventListener('submit', async 
             alert('Reto creado exitosamente.');
             fetchChallenges();
         } else {
-            alert(`Error: ${result.message}`);
+            alert(Error: ${result.message});
         }
     } catch (error) {
         console.error('Error al crear el reto:', error);
@@ -108,25 +109,33 @@ document.getElementById('participateChallengeForm').addEventListener('submit', a
     const retoId = document.getElementById('retoId').value;
     const foto = document.getElementById('foto').files[0];
     const token = localStorage.getItem('token');
+    const descripcion = "Descripcion";
+    const usuario = "usuario1";
+    const cris = "https://th.bing.com/th/id/OIP.RTcbIUThLSHyFtWUgnyzQgHaEK?rs=1&pid=ImgDetMain"
 
-    const formData = new FormData();
-    formData.append('retoId', retoId);
-    formData.append('foto', foto);
+    const data = {
+        usuario: usuario,
+        retoId: retoId,
+        imagenUrl: cris, // Mock URL de prueba
+        descripcion: descripcion,
+    };
 
     try {
-        const response = await fetch(`${API_URL}/api/retos/participar`, {
+        const response = await fetch(${API_URL}/api/publicaciones, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Authorization': Bearer ${token},
             },
-            body: formData,
+            body: JSON.stringify(data),
         });
+        console.log("response: ", response);
 
         const result = await response.json();
         if (response.ok) {
             alert('Foto subida exitosamente.');
         } else {
-            alert(`Error: ${result.message}`);
+            alert(Error: ${result.message});
         }
     } catch (error) {
         console.error('Error al participar en el reto:', error);
@@ -137,16 +146,21 @@ document.getElementById('participateChallengeForm').addEventListener('submit', a
 async function fetchChallenges() {
     const token = localStorage.getItem('token');
     try {
-        const response = await fetch(`${API_URL}/api/retos`, {
+        const response = await fetch(${API_URL}/api/retos, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': Bearer ${token},
             },
         });
 
         const retos = await response.json();
+        console.log('Retos obtenidos:', retos);
         const container = document.getElementById('trendingChallenges');
         const select = document.getElementById('retoId');
+        if (!select) {
+            console.error('El elemento con ID "retoId" no existe en el DOM.');
+            return;
+        }
         select.innerHTML = '<option value="" disabled selected>Selecciona un Reto</option>';
         container.innerHTML = retos.map(reto => `
             <div>
@@ -158,7 +172,7 @@ async function fetchChallenges() {
         retos.forEach(reto => {
             const option = document.createElement('option');
             option.value = reto._id;
-            option.textContent = reto.nombre;
+            option.textContent = reto.titulo;
             select.appendChild(option);
         });
     } catch (error) {
