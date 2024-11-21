@@ -1,0 +1,27 @@
+<!-- pages/register.html -->
+<form id="registerForm">
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Contraseña" required>
+    <button type="submit">Registrar</button>
+</form>
+
+<script type="module">
+    import { register } from '../assets/js/services/auth.js';
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            await register(nombre, email, password);
+            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            window.location.href = './login.html'; // Redirige al login
+        } catch (error) {
+            console.error(error.message);
+            alert('Error en el registro: ' + error.message);
+        }
+    });
+</script>

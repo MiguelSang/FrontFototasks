@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FotoTasks</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>FotoTasks</h1>
+        <nav>
+            <a href="#" id="register-link">Registro</a>
+            <a href="#" id="login-link">Inicio de Sesión</a>
+            <a href="#" id="create-challenge-link">Crear Reto</a>
+            <a href="#" id="participate-challenge-link">Participar en Reto</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Registro -->
+        <section id="register-section" style="display: none;">
+            <h2>Registro</h2>
+            <form id="registerForm">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="email" id="emailRegister" placeholder="Correo Electrónico" required>
+                <input type="password" id="passwordRegister" placeholder="Contraseña" required>
+                <button type="submit">Registrar</button>
+            </form>
+        </section>
+
+        <!-- Inicio de Sesión -->
+        <section id="login-section" style="display: none;">
+            <h2>Inicio de Sesión</h2>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Correo Electrónico" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+        </section>
+
+        <!-- Crear Reto -->
+        <section id="create-challenge-section" style="display: none;">
+            <h2>Crear Reto</h2>
+            <form id="createChallengeForm">
+                <input type="text" id="challengeName" placeholder="Nombre del Reto" required>
+                <textarea id="challengeDescription" placeholder="Descripción del Reto" required></textarea>
+                <button type="submit">Crear Reto</button>
+            </form>
+        </section>
+
+        <!-- Participar en Reto -->
+        <section id="participate-challenge-section" style="display: none;">
+            <h2>Participar en un Reto</h2>
+            <form id="participateChallengeForm" enctype="multipart/form-data">
+                <select id="retoId" required>
+                    <option value="" disabled selected>Selecciona un Reto</option>
+                </select>
+                <input type="file" id="foto" accept="image/*" required>
+                <button type="submit">Subir Foto</button>
+            </form>
+        </section>
+
+        <!-- Lista de Retos -->
+        <section id="retos-section">
+            <h2>Retos Actuales</h2>
+            <div id="trendingChallenges">
+                <!-- Retos serán cargados dinámicamente aquí -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 FotoTasks. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

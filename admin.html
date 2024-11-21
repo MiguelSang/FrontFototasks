@@ -1,0 +1,9 @@
+if (!localStorage.getItem('token')) {
+    alert('Debe iniciar sesión');
+    window.location.href = './login.html'; // Redirige al login
+}
+const userRole = localStorage.getItem('rol');
+if (userRole !== 'admin') {
+    alert('Acceso denegado. Solo administradores pueden acceder.');
+    window.location.href = './index.html'; // Redirige a la página principal
+}
