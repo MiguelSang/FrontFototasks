@@ -5,6 +5,15 @@ document.getElementById('register-link').addEventListener('click', () => toggleS
 document.getElementById('login-link').addEventListener('click', () => toggleSections('login'));
 document.getElementById('create-challenge-link').addEventListener('click', () => toggleSections('createChallenge'));
 document.getElementById('participate-challenge-link').addEventListener('click', () => toggleSections('participateChallenge'));
+document.getElementById('update-challenge-link').addEventListener('click', () => toggleSections('updateChallenge'));
+document.getElementById('delete-challenge-link').addEventListener('click', () => {
+    toggleSections('deleteChallenge');
+    displayChallengesForDelete(); // Cargar la lista de retos al entrar
+});
+document.getElementById('view-challenges-link').addEventListener('click', () => {
+    toggleSections('viewChallenges');
+    displayAllChallenges(); // Cargar todos los retos
+});
 
 function toggleSections(section) {
     const sections = {
@@ -12,7 +21,9 @@ function toggleSections(section) {
         login: 'login-section',
         createChallenge: 'create-challenge-section',
         participateChallenge: 'participate-challenge-section',
-        retos: 'retos-section',
+        updateChallenge: 'update-challenge-section',
+        deleteChallenge: 'delete-challenge-section',
+        viewChallenges: 'view-challenges-section',
     };
 
     for (const key in sections) {
@@ -28,7 +39,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const password = document.getElementById('passwordRegister').value;
 
     try {
-        const response = await fetch(${API_URL}/api/auth/register, {
+        const response = await fetch(`${API_URL}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, email, password }),
@@ -39,7 +50,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             alert('Registro exitoso.');
             toggleSections('login');
         } else {
-            alert(Error: ${result.message});
+            alert(`Error: ${result.message}`);
         }
     } catch (error) {
         console.error('Error al registrar:', error);
@@ -53,7 +64,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch(${API_URL}/api/auth/login, {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -61,13 +72,12 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
         const result = await response.json();
         if (response.ok) {
-            console.log("token: ", result.token)
             localStorage.setItem('token', result.token);
             alert('Inicio de sesión exitoso.');
             toggleSections('retos');
             fetchChallenges();
         } else {
-            alert(Error: ${result.message});
+            alert(`Error: ${result.message}`);
         }
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -82,11 +92,11 @@ document.getElementById('createChallengeForm').addEventListener('submit', async 
     const token = localStorage.getItem('token');
 
     try {
-        const response = await fetch(${API_URL}/api/retos, {
+        const response = await fetch(`${API_URL}/api/retos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': Bearer ${token},
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({ titulo, descripcion }),
         });
@@ -96,7 +106,7 @@ document.getElementById('createChallengeForm').addEventListener('submit', async 
             alert('Reto creado exitosamente.');
             fetchChallenges();
         } else {
-            alert(Error: ${result.message});
+            alert(`Error: ${result.message}`);
         }
     } catch (error) {
         console.error('Error al crear el reto:', error);
@@ -107,73 +117,162 @@ document.getElementById('createChallengeForm').addEventListener('submit', async 
 document.getElementById('participateChallengeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const retoId = document.getElementById('retoId').value;
-    const foto = document.getElementById('foto').files[0];
+    const imagenUrl = document.getElementById('imagenUrl').value;
+    const descripcion = document.getElementById('descripcion').value;
     const token = localStorage.getItem('token');
-    const descripcion = "Descripcion";
-    const usuario = "usuario1";
-    const cris = "https://th.bing.com/th/id/OIP.RTcbIUThLSHyFtWUgnyzQgHaEK?rs=1&pid=ImgDetMain"
 
-    const data = {
-        usuario: usuario,
-        retoId: retoId,
-        imagenUrl: cris, // Mock URL de prueba
-        descripcion: descripcion,
-    };
+    const data = { retoId, imagenUrl, descripcion };
 
     try {
-        const response = await fetch(${API_URL}/api/publicaciones, {
+        const response = await fetch(`${API_URL}/api/publicaciones`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': Bearer ${token},
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify(data),
         });
-        console.log("response: ", response);
 
         const result = await response.json();
         if (response.ok) {
-            alert('Foto subida exitosamente.');
+            alert('Participación en el reto enviada exitosamente.');
         } else {
-            alert(Error: ${result.message});
+            alert(`Error: ${result.message}`);
         }
     } catch (error) {
         console.error('Error al participar en el reto:', error);
     }
 });
 
-// Obtener Retos
-async function fetchChallenges() {
+// Actualizar Reto
+document.getElementById('updateChallengeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const retoId = document.getElementById('updateRetoId').value;
+    const titulo = document.getElementById('updateChallengeName').value;
+    const descripcion = document.getElementById('updateChallengeDescription').value;
     const token = localStorage.getItem('token');
+
     try {
-        const response = await fetch(${API_URL}/api/retos, {
+        const response = await fetch(`${API_URL}/api/retos/${retoId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ titulo, descripcion }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Reto actualizado exitosamente.');
+            fetchChallenges();
+        } else {
+            alert(`Error: ${result.message}`);
+        }
+    } catch (error) {
+        console.error('Error al actualizar el reto:', error);
+    }
+});
+
+// Eliminar Reto
+async function deleteChallenge(retoId) {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_URL}/api/retos/${retoId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Reto eliminado correctamente.');
+            fetchChallenges();
+        } else {
+            alert(`Error: ${result.message}`);
+        }
+    } catch (error) {
+        console.error('Error al eliminar el reto:', error);
+    }
+}
+
+// Mostrar retos con botones para eliminar
+async function displayChallengesForDelete() {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_URL}/api/retos`, {
             method: 'GET',
             headers: {
-                'Authorization': Bearer ${token},
+                'Authorization': `Bearer ${token}`,
             },
         });
 
         const retos = await response.json();
-        console.log('Retos obtenidos:', retos);
-        const container = document.getElementById('trendingChallenges');
-        const select = document.getElementById('retoId');
-        if (!select) {
-            console.error('El elemento con ID "retoId" no existe en el DOM.');
-            return;
-        }
-        select.innerHTML = '<option value="" disabled selected>Selecciona un Reto</option>';
+        const list = document.getElementById('challengeList');
+        list.innerHTML = retos.map(reto => `
+            <li>
+                <strong>${reto.titulo}</strong> - ${reto.descripcion}
+                <button onclick="deleteChallenge('${reto._id}')">Eliminar</button>
+            </li>
+        `).join('');
+    } catch (error) {
+        console.error('Error al cargar retos para eliminar:', error);
+    }
+}
+
+// Ver todos los Retos
+async function displayAllChallenges() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/api/retos`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const retos = await response.json();
+        const container = document.getElementById('allChallenges');
         container.innerHTML = retos.map(reto => `
             <div>
                 <h3>${reto.titulo}</h3>
                 <p>${reto.descripcion}</p>
             </div>
         `).join('');
+    } catch (error) {
+        console.error('Error al cargar todos los retos:', error);
+    }
+}
+
+// Obtener Retos para los Selects
+async function fetchChallenges() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/api/retos`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const retos = await response.json();
+        const participateSelect = document.getElementById('retoId');
+        const updateSelect = document.getElementById('updateRetoId');
+
+        participateSelect.innerHTML = '<option value="" disabled selected>Selecciona un Reto</option>';
+        updateSelect.innerHTML = '<option value="" disabled selected>Selecciona un Reto</option>';
 
         retos.forEach(reto => {
             const option = document.createElement('option');
             option.value = reto._id;
             option.textContent = reto.titulo;
-            select.appendChild(option);
+            participateSelect.appendChild(option);
+
+            const updateOption = option.cloneNode(true);
+            updateSelect.appendChild(updateOption);
         });
     } catch (error) {
         console.error('Error al obtener retos:', error);

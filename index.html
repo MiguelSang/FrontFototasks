@@ -14,6 +14,9 @@
             <a href="#" id="login-link">Inicio de Sesión</a>
             <a href="#" id="create-challenge-link">Crear Reto</a>
             <a href="#" id="participate-challenge-link">Participar en Reto</a>
+            <a href="#" id="update-challenge-link">Actualizar Reto</a>
+            <a href="#" id="delete-challenge-link">Eliminar Reto</a>
+            <a href="#" id="view-challenges-link">Ver Retos</a>
         </nav>
     </header>
 
@@ -52,20 +55,42 @@
         <!-- Participar en Reto -->
         <section id="participate-challenge-section" style="display: none;">
             <h2>Participar en un Reto</h2>
-            <form id="participateChallengeForm" enctype="multipart/form-data">
+            <form id="participateChallengeForm">
                 <select id="retoId" required>
                     <option value="" disabled selected>Selecciona un Reto</option>
                 </select>
-                <input type="file" id="foto" accept="image/*" required>
-                <button type="submit">Subir Foto</button>
+                <input type="text" id="imagenUrl" placeholder="Pon la URL de tu imagen" required>
+                <input type="text" id="descripcion" placeholder="Descripción de la imagen" required>
+                <button type="submit">Participar</button>
             </form>
         </section>
 
-        <!-- Lista de Retos -->
-        <section id="retos-section">
-            <h2>Retos Actuales</h2>
-            <div id="trendingChallenges">
-                <!-- Retos serán cargados dinámicamente aquí -->
+        <!-- Actualizar Reto -->
+        <section id="update-challenge-section" style="display: none;">
+            <h2>Actualizar Reto</h2>
+            <form id="updateChallengeForm">
+                <select id="updateRetoId" required>
+                    <option value="" disabled selected>Selecciona un Reto</option>
+                </select>
+                <input type="text" id="updateChallengeName" placeholder="Nuevo Nombre del Reto" required>
+                <textarea id="updateChallengeDescription" placeholder="Nueva Descripción del Reto" required></textarea>
+                <button type="submit">Actualizar Reto</button>
+            </form>
+        </section>
+
+        <!-- Eliminar Reto -->
+        <section id="delete-challenge-section" style="display: none;">
+            <h2>Eliminar Reto</h2>
+            <ul id="challengeList">
+                <!-- Lista de retos con botones para eliminar -->
+            </ul>
+        </section>
+
+        <!-- Ver Retos -->
+        <section id="view-challenges-section" style="display: none;">
+            <h2>Lista de Retos</h2>
+            <div id="allChallenges">
+                <!-- Retos se cargarán dinámicamente aquí -->
             </div>
         </section>
     </main>
