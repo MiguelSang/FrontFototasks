@@ -50,12 +50,13 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const nombre = document.getElementById('nombre').value;
     const email = document.getElementById('emailRegister').value;
     const password = document.getElementById('passwordRegister').value;
+    const rol = document.getElementById('rolRegister').value;
 
     try {
         const response = await fetch(`${API_URL}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, email, password }),
+            body: JSON.stringify({ nombre, email, password, rol }),
         });
 
         const result = await response.json();
@@ -93,6 +94,71 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         }
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
+    }
+});
+
+// **Actualizar Usuario**
+document.getElementById('updateUserForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const userId = document.getElementById('userIdToUpdate').value;
+    const nombre = document.getElementById('updateUserName').value;
+    const email = document.getElementById('updateUserEmail').value;
+    const password = document.getElementById('updateUserPassword').value;
+    const rol = document.getElementById('updateUserRole').value;
+
+    const data = { nombre, email, password, rol };
+
+    // Filtrar campos vacíos
+    Object.keys(data).forEach(key => {
+        if (!data[key]) delete data[key];
+    });
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/usuarios/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Usuario actualizado exitosamente.');
+        } else {
+            alert(`Error: ${result.message}`);
+        }
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+    }
+});
+
+// **Eliminar Usuario**
+document.getElementById('deleteUserForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const userId = document.getElementById('userIdToDelete').value;
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/api/usuarios/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Usuario eliminado exitosamente.');
+        } else {
+            alert(`Error: ${result.message}`);
+        }
+    } catch (error) {
+        console.error('Error al eliminar usuario:', error);
     }
 });
 

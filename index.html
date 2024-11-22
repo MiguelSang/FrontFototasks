@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FotoTasks</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <h1>FotoTasks</h1>
@@ -30,9 +32,15 @@
                 <input type="text" id="nombre" placeholder="Nombre" required>
                 <input type="email" id="emailRegister" placeholder="Correo Electrónico" required>
                 <input type="password" id="passwordRegister" placeholder="Contraseña" required>
+                <select id="rolRegister" required>
+                    <option value="" disabled selected>Selecciona un Rol</option>
+                    <option value="usuario">Usuario</option>
+                    <option value="administrador">Administrador</option>
+                </select>
                 <button type="submit">Registrar</button>
             </form>
         </section>
+
 
         <!-- Inicio de Sesión -->
         <section id="login-section" style="display: none;">
@@ -95,6 +103,31 @@
                 <!-- Retos se cargarán dinámicamente aquí -->
             </div>
         </section>
+        <!-- Actualizar Usuario -->
+        <section id="update-user-section" style="display: none;">
+            <h2>Actualizar Usuario</h2>
+            <form id="updateUserForm">
+                <input type="text" id="userIdToUpdate" placeholder="ID del Usuario" required>
+                <input type="text" id="updateUserName" placeholder="Nuevo Nombre">
+                <input type="email" id="updateUserEmail" placeholder="Nuevo Correo Electrónico">
+                <input type="password" id="updateUserPassword" placeholder="Nueva Contraseña">
+                <select id="updateUserRole">
+                    <option value="" disabled selected>Selecciona un Nuevo Rol</option>
+                    <option value="usuario">Usuario</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+                <button type="submit">Actualizar Usuario</button>
+            </form>
+        </section>
+
+        <!-- Eliminar Usuario -->
+        <section id="delete-user-section" style="display: none;">
+            <h2>Eliminar Usuario</h2>
+            <form id="deleteUserForm">
+                <input type="text" id="userIdToDelete" placeholder="ID del Usuario" required>
+                <button type="submit">Eliminar Usuario</button>
+            </form>
+        </section>
 
         <!-- Actualizar Estadísticas -->
         <section id="update-stats-section" style="display: none;">
@@ -121,4 +154,5 @@
 
     <script src="main.js"></script>
 </body>
+
 </html>
