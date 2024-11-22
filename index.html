@@ -17,6 +17,8 @@
             <a href="#" id="update-challenge-link">Actualizar Reto</a>
             <a href="#" id="delete-challenge-link">Eliminar Reto</a>
             <a href="#" id="view-challenges-link">Ver Retos</a>
+            <a href="#" id="update-stats-link">Actualizar Estadísticas</a>
+            <a href="#" id="view-stats-link">Ver Estadísticas</a>
         </nav>
     </header>
 
@@ -91,6 +93,24 @@
             <h2>Lista de Retos</h2>
             <div id="allChallenges">
                 <!-- Retos se cargarán dinámicamente aquí -->
+            </div>
+        </section>
+
+        <!-- Actualizar Estadísticas -->
+        <section id="update-stats-section" style="display: none;">
+            <h2>Actualizar Estadísticas</h2>
+            <form id="updateStatsForm">
+                <input type="text" id="usuarioId" placeholder="ID del Usuario" required>
+                <input type="number" id="likesRecibidos" placeholder="Likes Recibidos" required>
+                <button type="submit">Actualizar Estadísticas</button>
+            </form>
+        </section>
+
+        <!-- Ver Estadísticas -->
+        <section id="view-stats-section" style="display: none;">
+            <h2>Estadísticas de Todos los Usuarios</h2>
+            <div id="statsContainer">
+                <!-- Las estadísticas se cargarán dinámicamente aquí -->
             </div>
         </section>
     </main>

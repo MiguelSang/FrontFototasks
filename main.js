@@ -4,15 +4,26 @@ const API_URL = 'http://localhost:5001'; // Cambia a la URL de tu backend si est
 document.getElementById('register-link').addEventListener('click', () => toggleSections('register'));
 document.getElementById('login-link').addEventListener('click', () => toggleSections('login'));
 document.getElementById('create-challenge-link').addEventListener('click', () => toggleSections('createChallenge'));
-document.getElementById('participate-challenge-link').addEventListener('click', () => toggleSections('participateChallenge'));
-document.getElementById('update-challenge-link').addEventListener('click', () => toggleSections('updateChallenge'));
+document.getElementById('participate-challenge-link').addEventListener('click', () => {
+    toggleSections('participateChallenge');
+    fetchChallenges(); // Llenar el select para participar
+});
+document.getElementById('update-challenge-link').addEventListener('click', () => {
+    toggleSections('updateChallenge');
+    fetchChallenges(); // Llenar el select para actualizar
+});
 document.getElementById('delete-challenge-link').addEventListener('click', () => {
     toggleSections('deleteChallenge');
-    displayChallengesForDelete(); // Cargar la lista de retos al entrar
+    displayChallengesForDelete(); // Mostrar retos para eliminar
 });
 document.getElementById('view-challenges-link').addEventListener('click', () => {
     toggleSections('viewChallenges');
-    displayAllChallenges(); // Cargar todos los retos
+    displayAllChallenges(); // Mostrar todos los retos
+});
+document.getElementById('update-stats-link').addEventListener('click', () => toggleSections('updateStats'));
+document.getElementById('view-stats-link').addEventListener('click', () => {
+    toggleSections('viewStats');
+    fetchAllStats(); // Cargar estadísticas al acceder
 });
 
 function toggleSections(section) {
@@ -24,6 +35,8 @@ function toggleSections(section) {
         updateChallenge: 'update-challenge-section',
         deleteChallenge: 'delete-challenge-section',
         viewChallenges: 'view-challenges-section',
+        updateStats: 'update-stats-section',
+        viewStats: 'view-stats-section',
     };
 
     for (const key in sections) {
@@ -74,8 +87,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             localStorage.setItem('token', result.token);
             alert('Inicio de sesión exitoso.');
-            toggleSections('retos');
-            fetchChallenges();
+            toggleSections('createChallenge');
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -104,7 +116,7 @@ document.getElementById('createChallengeForm').addEventListener('submit', async 
         const result = await response.json();
         if (response.ok) {
             alert('Reto creado exitosamente.');
-            fetchChallenges();
+            fetchChallenges(); // Actualizar los retos
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -165,7 +177,7 @@ document.getElementById('updateChallengeForm').addEventListener('submit', async 
         const result = await response.json();
         if (response.ok) {
             alert('Reto actualizado exitosamente.');
-            fetchChallenges();
+            fetchChallenges(); // Actualizar los retos
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -189,7 +201,7 @@ async function deleteChallenge(retoId) {
         const result = await response.json();
         if (response.ok) {
             alert('Reto eliminado correctamente.');
-            fetchChallenges();
+            displayChallengesForDelete(); // Refrescar la lista
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -276,5 +288,51 @@ async function fetchChallenges() {
         });
     } catch (error) {
         console.error('Error al obtener retos:', error);
+    }
+}
+
+// Funciones relacionadas con estadísticas
+document.getElementById('updateStatsForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const usuario = document.getElementById('usuarioId').value;
+    const likesRecibidos = parseInt(document.getElementById('likesRecibidos').value, 10);
+
+    try {
+        const response = await fetch(`${API_URL}/api/estadisticas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ usuario, likesRecibidos }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Estadísticas actualizadas exitosamente.');
+        } else {
+            alert(`Error: ${result.error}`);
+        }
+    } catch (error) {
+        console.error('Error al actualizar las estadísticas:', error);
+    }
+});
+
+async function fetchAllStats() {
+    try {
+        const response = await fetch(`${API_URL}/api/estadisticas`, {
+            method: 'GET',
+        });
+
+        const estadisticas = await response.json();
+        const container = document.getElementById('statsContainer');
+        container.innerHTML = estadisticas.map(est => `
+            <div>
+                <h3>Usuario: ${est.usuario}</h3>
+                <p>Likes Recibidos: ${est.likesRecibidos}</p>
+                <p>Publicaciones Creadas: ${est.publicacionesCreadas}</p>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error al obtener estadísticas:', error);
     }
 }
