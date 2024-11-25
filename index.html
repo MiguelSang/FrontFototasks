@@ -26,6 +26,8 @@
             <button id="view-challenges-link">Ver Retos</button>
             <button id="update-stats-link">Actualizar Estadísticas</button>
             <button id="view-stats-link">Ver Estadísticas</button>
+            <button id="update-user-link">Actualizar Usuario</button>
+            <button id="delete-user-link">Eliminar Usuario</button>
         </nav>
     </header>
 
@@ -122,13 +124,12 @@
         <!-- Actualizar Usuario -->
         <section id="update-user-section" style="display: none;">
             <h2>Actualizar Usuario</h2>
-            <p>Modifica los datos del usuario seleccionado, como su nombre, correo electrónico y rol.</p>
             <form id="updateUserForm">
                 <input type="text" id="userIdToUpdate" placeholder="ID del Usuario" required>
                 <input type="text" id="updateUserName" placeholder="Nuevo Nombre">
                 <input type="email" id="updateUserEmail" placeholder="Nuevo Correo Electrónico">
                 <input type="password" id="updateUserPassword" placeholder="Nueva Contraseña">
-                <select id="updateUserRole" required>
+                <select id="updateUserRole">
                     <option value="" disabled selected>Selecciona un Nuevo Rol</option>
                     <option value="usuario">Usuario</option>
                     <option value="administrador">Administrador</option>
@@ -136,7 +137,6 @@
                 <button type="submit">Actualizar Usuario</button>
             </form>
         </section>
-
         <!-- Eliminar Usuario -->
         <section id="delete-user-section" style="display: none;">
             <h2>Eliminar Usuario</h2>

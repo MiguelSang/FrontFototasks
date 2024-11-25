@@ -303,3 +303,13 @@ footer p {
     background-color: var(--accent);
     transform: scale(1.05);
 }
+#update-user-section, #delete-user-section {
+    text-align: center;
+    padding: 20px;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    background-color: var(--background-light);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: none; /* Ocultas por defecto */
+}

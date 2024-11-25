@@ -7,6 +7,8 @@ const nav = document.querySelector('nav');
 // Mostrar/Ocultar secciones
 document.getElementById('register-link').addEventListener('click', () => toggleSections('register'));
 document.getElementById('login-link').addEventListener('click', () => toggleSections('login'));
+document.getElementById('update-user-link').addEventListener('click', () => toggleSections('updateUser'));
+document.getElementById('delete-user-link').addEventListener('click', () => toggleSections('deleteUser'));
 document.getElementById('create-challenge-link').addEventListener('click', () => toggleSections('createChallenge'));
 document.getElementById('participate-challenge-link').addEventListener('click', () => {
     toggleSections('participateChallenge');
@@ -29,6 +31,16 @@ document.getElementById('view-stats-link').addEventListener('click', () => {
     toggleSections('viewStats');
     fetchAllStats(); // Cargar estadísticas al acceder
 });
+document.getElementById('update-user-link').addEventListener('click', () => {
+    console.log('Actualizar Usuario clickeado');
+    toggleSections('updateUser');
+});
+
+document.getElementById('delete-user-link').addEventListener('click', () => {
+    console.log('Eliminar Usuario clickeado');
+    toggleSections('deleteUser');
+});
+
 
 function toggleSections(section) {
     const sections = {
@@ -41,6 +53,8 @@ function toggleSections(section) {
         viewChallenges: 'view-challenges-section',
         updateStats: 'update-stats-section',
         viewStats: 'view-stats-section',
+        updateUser: 'update-user-section',
+        deleteUser: 'delete-user-section',
     };
 
     for (const key in sections) {
@@ -447,6 +461,8 @@ function filterMenuByRole() {
             'update-challenge-link',
             'delete-challenge-link',
             'update-stats-link',
+            'update-user-link',
+            'delete-user-link',
         ],
     };
 
