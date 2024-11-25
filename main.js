@@ -32,12 +32,22 @@ document.getElementById('view-stats-link').addEventListener('click', () => {
     fetchAllStats(); // Cargar estadísticas al acceder
 });
 document.getElementById('update-user-link').addEventListener('click', () => {
-    console.log('Actualizar Usuario clickeado');
+    console.log('Clic en Actualizar Usuario'); // Debug
+    toggleSections('updateUser');
+});
+document.getElementById('update-user-link').addEventListener('click', () => {
+    console.log('Botón de Actualizar Usuario clickeado');
     toggleSections('updateUser');
 });
 
 document.getElementById('delete-user-link').addEventListener('click', () => {
-    console.log('Eliminar Usuario clickeado');
+    console.log('Botón de Eliminar Usuario clickeado');
+    toggleSections('deleteUser');
+});
+
+
+document.getElementById('delete-user-link').addEventListener('click', () => {
+    console.log('Clic en Eliminar Usuario'); // Debug
     toggleSections('deleteUser');
 });
 
@@ -58,7 +68,8 @@ function toggleSections(section) {
     };
 
     for (const key in sections) {
-        document.getElementById(sections[key]).style.display = key === section ? 'block' : 'none';
+        document.getElementById(sections[key]).style.display =
+            key === section ? 'block' : 'none';
     }
 }
 
@@ -456,11 +467,9 @@ function filterMenuByRole() {
         admin: [
             'participate-challenge-link',
             'view-challenges-link',
-            'view-stats-link',
             'create-challenge-link',
             'update-challenge-link',
             'delete-challenge-link',
-            'update-stats-link',
             'update-user-link',
             'delete-user-link',
         ],
