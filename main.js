@@ -1,5 +1,9 @@
 const API_URL = 'http://localhost:5001'; // Cambia a la URL de tu backend si está desplegado
 
+// Elementos iniciales
+const mainButtons = document.getElementById('main-buttons');
+const nav = document.querySelector('nav');
+
 // Mostrar/Ocultar secciones
 document.getElementById('register-link').addEventListener('click', () => toggleSections('register'));
 document.getElementById('login-link').addEventListener('click', () => toggleSections('login'));
@@ -50,7 +54,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const nombre = document.getElementById('nombre').value;
     const email = document.getElementById('emailRegister').value;
     const password = document.getElementById('passwordRegister').value;
-    const rol = document.getElementById('rolRegister').value;
+    const rol = "usuario"
 
     try {
         const response = await fetch(`${API_URL}/api/auth/register`, {
@@ -62,7 +66,11 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         const result = await response.json();
         if (response.ok) {
             alert('Registro exitoso.');
-            toggleSections('login');
+            localStorage.setItem('token', result.token);
+            localStorage.setItem('rol', result.rol);
+            localStorage.setItem('nombre', result.nombre);
+            activateMenu();
+            toggleSections('viewChallenges');
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -87,8 +95,12 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const result = await response.json();
         if (response.ok) {
             localStorage.setItem('token', result.token);
+            localStorage.setItem('rol', result.rol);
+            localStorage.setItem('nombre', result.nombre);
             alert('Inicio de sesión exitoso.');
-            toggleSections('createChallenge');
+            activateMenu();
+            await loadChallenges();
+            toggleSections('viewChallenges');
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -198,8 +210,9 @@ document.getElementById('participateChallengeForm').addEventListener('submit', a
     const imagenUrl = document.getElementById('imagenUrl').value;
     const descripcion = document.getElementById('descripcion').value;
     const token = localStorage.getItem('token');
+    const usuario = localStorage.getItem('nombre');
 
-    const data = { retoId, imagenUrl, descripcion };
+    const data = { retoId, imagenUrl, descripcion, usuario };
 
     try {
         const response = await fetch(`${API_URL}/api/publicaciones`, {
@@ -243,7 +256,7 @@ document.getElementById('updateChallengeForm').addEventListener('submit', async 
         const result = await response.json();
         if (response.ok) {
             alert('Reto actualizado exitosamente.');
-            fetchChallenges(); // Actualizar los retos
+            fetchChallenges();
         } else {
             alert(`Error: ${result.message}`);
         }
@@ -255,20 +268,18 @@ document.getElementById('updateChallengeForm').addEventListener('submit', async 
 // Eliminar Reto
 async function deleteChallenge(retoId) {
     const token = localStorage.getItem('token');
-
     try {
         const response = await fetch(`${API_URL}/api/retos/${retoId}`, {
             method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
+            headers: { 'Authorization': `Bearer ${token}` },
         });
 
-        const result = await response.json();
         if (response.ok) {
             alert('Reto eliminado correctamente.');
+            // fetchChallenges(); // Refrescar lista
             displayChallengesForDelete(); // Refrescar la lista
         } else {
+            const result = await response.json();
             alert(`Error: ${result.message}`);
         }
     } catch (error) {
@@ -315,7 +326,7 @@ async function displayAllChallenges() {
         const retos = await response.json();
         const container = document.getElementById('allChallenges');
         container.innerHTML = retos.map(reto => `
-            <div>
+            <div class="challenge-card">
                 <h3>${reto.titulo}</h3>
                 <p>${reto.descripcion}</p>
             </div>
@@ -385,10 +396,7 @@ document.getElementById('updateStatsForm')?.addEventListener('submit', async (e)
 
 async function fetchAllStats() {
     try {
-        const response = await fetch(`${API_URL}/api/estadisticas`, {
-            method: 'GET',
-        });
-
+        const response = await fetch(`${API_URL}/api/estadisticas`, { method: 'GET' });
         const estadisticas = await response.json();
         const container = document.getElementById('statsContainer');
         container.innerHTML = estadisticas.map(est => `
@@ -400,5 +408,67 @@ async function fetchAllStats() {
         `).join('');
     } catch (error) {
         console.error('Error al obtener estadísticas:', error);
+    }
+}
+
+// Activar menú y ocultar botones iniciales
+async function activateMenu() {
+    const mainButtons = document.getElementById('main-buttons');
+    console.log(mainButtons); // Verifica si encuentra el elemento
+    console.log(mainButtons.style.display); // Contenedor de botones iniciales
+    const nav = document.querySelector('nav'); // Menú de navegación
+
+    if (mainButtons) {
+        mainButtons.style.display = 'none'; // Ocultar botones iniciales
+    } else {
+        console.warn('main-buttons no encontrado');
+    }
+
+    if (nav) {
+        nav.style.display = 'flex'; // Mostrar menú completo
+        filterMenuByRole(); // Filtrar opciones del menú por rol
+    } else {
+        console.warn('nav no encontrado');
+    }
+}
+
+// Función para mostrar/ocultar opciones del menú según el rol
+function filterMenuByRole() {
+    const userRole = localStorage.getItem('rol'); // Obtén el rol desde localStorage
+
+    // Mapea IDs de botones/elementos al rol que los puede ver
+    const rolePermissions = {
+        usuario: ['participate-challenge-link', 'view-challenges-link', 'view-stats-link'],
+        admin: [
+            'participate-challenge-link',
+            'view-challenges-link',
+            'view-stats-link',
+            'create-challenge-link',
+            'update-challenge-link',
+            'delete-challenge-link',
+            'update-stats-link',
+        ],
+    };
+
+    // Oculta todos los botones del menú
+    document.querySelectorAll('nav button').forEach((button) => {
+        button.style.display = 'none';
+    });
+
+    // Muestra los botones permitidos según el rol
+    if (userRole && rolePermissions[userRole]) {
+        rolePermissions[userRole].forEach((id) => {
+            const button = document.getElementById(id);
+            if (button) button.style.display = 'inline-block';
+        });
+    }
+}
+
+// Modificar activateMenu para incluir el filtro del menú
+function activateMenu() {
+    const nav = document.querySelector('nav');
+    if (nav) {
+        nav.style.display = 'flex'; // Muestra el menú
+        filterMenuByRole(); // Filtra las opciones del menú por rol
     }
 }

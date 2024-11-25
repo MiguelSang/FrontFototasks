@@ -11,16 +11,21 @@
 <body>
     <header>
         <h1>FotoTasks</h1>
+        <p class="tagline">¡Organiza tus retos fotográficos con facilidad!</p>
+        <div id="main-buttons">
+            <button id="register-link">Registrarse</button>
+            <button id="login-link">Iniciar Sesión</button>
+        </div>
+
+        <!-- Menú de navegación (oculto inicialmente) -->
         <nav>
-            <a href="#" id="register-link">Registro</a>
-            <a href="#" id="login-link">Inicio de Sesión</a>
-            <a href="#" id="create-challenge-link">Crear Reto</a>
-            <a href="#" id="participate-challenge-link">Participar en Reto</a>
-            <a href="#" id="update-challenge-link">Actualizar Reto</a>
-            <a href="#" id="delete-challenge-link">Eliminar Reto</a>
-            <a href="#" id="view-challenges-link">Ver Retos</a>
-            <a href="#" id="update-stats-link">Actualizar Estadísticas</a>
-            <a href="#" id="view-stats-link">Ver Estadísticas</a>
+            <button id="create-challenge-link">Crear Reto</button>
+            <button id="participate-challenge-link">Participar en Reto</button>
+            <button id="update-challenge-link">Actualizar Reto</button>
+            <button id="delete-challenge-link">Eliminar Reto</button>
+            <button id="view-challenges-link">Ver Retos</button>
+            <button id="update-stats-link">Actualizar Estadísticas</button>
+            <button id="view-stats-link">Ver Estadísticas</button>
         </nav>
     </header>
 
@@ -28,15 +33,11 @@
         <!-- Registro -->
         <section id="register-section" style="display: none;">
             <h2>Registro</h2>
+            <p>Únete a nuestra comunidad para disfrutar y participar en emocionantes retos fotográficos.</p>
             <form id="registerForm">
                 <input type="text" id="nombre" placeholder="Nombre" required>
                 <input type="email" id="emailRegister" placeholder="Correo Electrónico" required>
                 <input type="password" id="passwordRegister" placeholder="Contraseña" required>
-                <select id="rolRegister" required>
-                    <option value="" disabled selected>Selecciona un Rol</option>
-                    <option value="usuario">Usuario</option>
-                    <option value="administrador">Administrador</option>
-                </select>
                 <button type="submit">Registrar</button>
             </form>
         </section>
@@ -45,6 +46,7 @@
         <!-- Inicio de Sesión -->
         <section id="login-section" style="display: none;">
             <h2>Inicio de Sesión</h2>
+            <p>Accede a tu cuenta para descubrir los últimos retos o gestionar tus estadísticas.</p>
             <form id="loginForm">
                 <input type="email" id="email" placeholder="Correo Electrónico" required>
                 <input type="password" id="password" placeholder="Contraseña" required>
@@ -52,19 +54,10 @@
             </form>
         </section>
 
-        <!-- Crear Reto -->
-        <section id="create-challenge-section" style="display: none;">
-            <h2>Crear Reto</h2>
-            <form id="createChallengeForm">
-                <input type="text" id="challengeName" placeholder="Nombre del Reto" required>
-                <textarea id="challengeDescription" placeholder="Descripción del Reto" required></textarea>
-                <button type="submit">Crear Reto</button>
-            </form>
-        </section>
-
         <!-- Participar en Reto -->
         <section id="participate-challenge-section" style="display: none;">
             <h2>Participar en un Reto</h2>
+            <p>Sube tus mejores fotos y compite con otros usuarios en retos temáticos únicos.</p>
             <form id="participateChallengeForm">
                 <select id="retoId" required>
                     <option value="" disabled selected>Selecciona un Reto</option>
@@ -75,6 +68,17 @@
             </form>
         </section>
 
+        <!-- Crear Reto -->
+        <section id="create-challenge-section" style="display: none;">
+            <h2>Crear Reto</h2>
+            <p>Crea un nuevo reto para inspirar a otros fotógrafos y explorar su creatividad.</p>
+            <form id="createChallengeForm">
+                <input type="text" id="challengeName" placeholder="Nombre del Reto" required>
+                <textarea id="challengeDescription" placeholder="Descripción del Reto" required></textarea>
+                <button type="submit">Crear Reto</button>
+            </form>
+        </section>
+        
         <!-- Actualizar Reto -->
         <section id="update-challenge-section" style="display: none;">
             <h2>Actualizar Reto</h2>
@@ -100,18 +104,31 @@
         <section id="view-challenges-section" style="display: none;">
             <h2>Lista de Retos</h2>
             <div id="allChallenges">
-                <!-- Retos se cargarán dinámicamente aquí -->
+                <!-- Cada reto será una tarjeta dinámica -->
+                <div class="challenge-card">
+                    <h3>Reto 1: Naturaleza</h3>
+                    <p>Captura imágenes que resalten la belleza natural de tu entorno.</p>
+                    <button>Ver Detalles</button>
+                </div>
+                <div class="challenge-card">
+                    <h3>Reto 2: Retratos</h3>
+                    <p>Muestra tu talento para capturar emociones en tus retratos.</p>
+                    <button>Ver Detalles</button>
+                </div>
+                <!-- Más retos dinámicos aquí -->
             </div>
         </section>
+        
         <!-- Actualizar Usuario -->
         <section id="update-user-section" style="display: none;">
             <h2>Actualizar Usuario</h2>
+            <p>Modifica los datos del usuario seleccionado, como su nombre, correo electrónico y rol.</p>
             <form id="updateUserForm">
                 <input type="text" id="userIdToUpdate" placeholder="ID del Usuario" required>
                 <input type="text" id="updateUserName" placeholder="Nuevo Nombre">
                 <input type="email" id="updateUserEmail" placeholder="Nuevo Correo Electrónico">
                 <input type="password" id="updateUserPassword" placeholder="Nueva Contraseña">
-                <select id="updateUserRole">
+                <select id="updateUserRole" required>
                     <option value="" disabled selected>Selecciona un Nuevo Rol</option>
                     <option value="usuario">Usuario</option>
                     <option value="administrador">Administrador</option>
@@ -150,6 +167,7 @@
 
     <footer>
         <p>© 2024 FotoTasks. Todos los derechos reservados.</p>
+        <p>Explora la creatividad, vive el momento 📸</p>
     </footer>
 
     <script src="main.js"></script>
